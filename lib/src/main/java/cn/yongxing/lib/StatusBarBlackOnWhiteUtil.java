@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,7 +17,6 @@ import java.lang.reflect.Method;
 
 
 /**
- *
  * @author jiangyongxing
  * @date 2019/5/6
  * 描述：设置我们的状态栏为白底黑字的样式
@@ -28,6 +28,77 @@ public class StatusBarBlackOnWhiteUtil {
      * MIUI9
      */
     private static final int MIUI_TYPE_9 = 9;
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setStatusBarColorAndFontColor(Activity activity) {
+        setStatusBarColorAndFontColor(activity, Color.WHITE, true);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setStatusBarColorAndFontColor(Activity activity, int statusBarBackGroundColor) {
+        setStatusBarColorAndFontColor(activity, statusBarBackGroundColor, true);
+    }
+
+    /**
+     * 移除白底黑字的样式
+     *
+     * @param activity
+     */
+    public static void removeStatusBarBlackOnWhite(Activity activity) {
+        removeStatusBarBlackOnWhite(activity, 0);
+    }
+
+    /**
+     * 移除白底黑字的样式
+     *
+     * @param activity                 需要移除的Activity
+     * @param statusBarBackGroundColor 移除以后状态栏显示的颜色
+     */
+    public static void removeStatusBarBlackOnWhite(Activity activity, int statusBarBackGroundColor) {
+        setStatusBarColorAndFontColor(activity,
+                statusBarBackGroundColor == 0 ? getColorPrimary(activity) : statusBarBackGroundColor,
+                false);
+    }
+
+    private static int getColorPrimary(Activity activity) {
+        TypedValue typedValue = new TypedValue();
+        activity.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        return typedValue.data;
+    }
+
+    /**
+     * 是否启用白底黑字状态栏
+     *
+     * @param activity                     需要改变的Activity
+     * @param statusBarBackGroundColor     状态栏的背景颜色
+     * @param settingStatusBarBlackOnWhite 是否需要设置成白底黑字的样式
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setStatusBarColorAndFontColor(Activity activity, int statusBarBackGroundColor, boolean settingStatusBarBlackOnWhite) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (setMIUIStatusBarLightMode(activity.getWindow(), settingStatusBarBlackOnWhite) && (MIUITypeUtils.getMiuiVersion() < MIUI_TYPE_9)) {
+                //MIUI  miui9不需要这样子更改了  直接采用原生的就好了
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    //5.0
+                    activity.getWindow().setStatusBarColor(statusBarBackGroundColor);
+                } else {
+                    //4.4
+                    setStatusBarColorByKITKAT(activity, statusBarBackGroundColor);
+                }
+            } else if (setFlymeStatusBarLightMode(activity.getWindow(), settingStatusBarBlackOnWhite)) {
+                //Flyme
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    //5.0
+                    activity.getWindow().setStatusBarColor(statusBarBackGroundColor);
+                } else {
+                    //4.4
+                    setStatusBarColorByKITKAT(activity, statusBarBackGroundColor);
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setStatusBarColorByCommonSystem(activity, statusBarBackGroundColor, settingStatusBarBlackOnWhite);
+            }
+        }
+    }
 
     private static boolean setMIUIStatusBarLightMode(Window window, boolean dark) {
         boolean result = false;
@@ -85,45 +156,11 @@ public class StatusBarBlackOnWhiteUtil {
     }
 
 
-    //白色可以替换成其他浅色系
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void setStatusBarColorAndFontColor(Activity activity) {
-        setStatusBarColorAndFontColor(activity, Color.WHITE);
-    }
-
-
-    //白色可以替换成其他浅色系
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void setStatusBarColorAndFontColor(Activity activity, int statusBarBackGroundColor) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (setMIUIStatusBarLightMode(activity.getWindow(), true) && (MIUITypeUtils.getMiuiVersion() < MIUI_TYPE_9)) {
-                //MIUI  miui9不需要这样子更改了  直接采用原生的就好了
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    //5.0
-                    activity.getWindow().setStatusBarColor(statusBarBackGroundColor);
-                } else {
-                    //4.4
-                    setStatusBarColorByKITKAT(activity, statusBarBackGroundColor);
-                }
-            } else if (setFlymeStatusBarLightMode(activity.getWindow(), true)) {
-                //Flyme
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    //5.0
-                    activity.getWindow().setStatusBarColor(statusBarBackGroundColor);
-                } else {
-                    //4.4
-                    setStatusBarColorByKITKAT(activity, statusBarBackGroundColor);
-                }
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                setStatusBarColorByCommonSystem(activity, statusBarBackGroundColor);
-            }
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    static void setStatusBarColorByCommonSystem(Activity activity, int bgColor) {
-        activity.getWindow().setStatusBarColor(bgColor);
-        activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    static void setStatusBarColorByCommonSystem(Activity activity, int bgColor, boolean settingStatusBarBlackOnWhite) {
+        Window window = activity.getWindow();
+        window.setStatusBarColor(bgColor);
+        window.getDecorView().setSystemUiVisibility(settingStatusBarBlackOnWhite ? View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR : 0);
     }
 
     /**
