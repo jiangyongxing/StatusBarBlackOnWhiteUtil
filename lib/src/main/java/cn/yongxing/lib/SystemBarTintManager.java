@@ -22,7 +22,6 @@ import android.widget.FrameLayout.LayoutParams;
 import java.lang.reflect.Method;
 
 /**
- *
  * @author jiangyongxing
  * @date 2019/5/6
  * 描述：
@@ -204,7 +203,12 @@ public class SystemBarTintManager {
      */
     public void setStatusBarTintResource(int res) {
         if (mStatusBarAvailable) {
-            mStatusBarTintView.setBackgroundResource(res);
+            try {
+                // 在低版本的手机上，不允许将Color类型的id设置到setBackgroundResource方法中
+                mStatusBarTintView.setBackgroundResource(res);
+            } catch (Exception e) {
+                mStatusBarTintView.setBackgroundColor(res);
+            }
         }
     }
 

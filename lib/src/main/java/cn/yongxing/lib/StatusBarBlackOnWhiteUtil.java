@@ -3,9 +3,9 @@ package cn.yongxing.lib;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +31,7 @@ public class StatusBarBlackOnWhiteUtil {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setStatusBarColorAndFontColor(Activity activity) {
-        setStatusBarColorAndFontColor(activity, Color.WHITE, true);
+        setStatusBarColorAndFontColor(activity, ContextCompat.getColor(activity, R.color.white), true);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
