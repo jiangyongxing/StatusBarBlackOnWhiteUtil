@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        StatusBarBlackOnWhiteUtil.setStatusBarColorAndFontColor(this);
+        StatusBarBlackOnWhiteUtil.setStatusBarColorAndFontColor(this,0);
     }
 
     public void remove(View view) {

@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +32,12 @@ public class StatusBarBlackOnWhiteUtil {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setStatusBarColorAndFontColor(Activity activity) {
-        setStatusBarColorAndFontColor(activity, ContextCompat.getColor(activity, R.color.white), true);
+        setStatusBarColorAndFontColor(activity, Color.WHITE, true);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setStatusBarColorAndFontColor(Activity activity, int statusBarBackGroundColor) {
-        setStatusBarColorAndFontColor(activity, statusBarBackGroundColor, true);
+        setStatusBarColorAndFontColor(activity, statusBarBackGroundColor == 0 ? Color.WHITE : statusBarBackGroundColor, true);
     }
 
     /**
@@ -156,7 +156,13 @@ public class StatusBarBlackOnWhiteUtil {
 
     }
 
-
+    /**
+     * 普通系统的设置方法
+     *
+     * @param activity
+     * @param bgColor
+     * @param settingStatusBarBlackOnWhite
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     static void setStatusBarColorByCommonSystem(Activity activity, int bgColor, boolean settingStatusBarBlackOnWhite) {
         Window window = activity.getWindow();

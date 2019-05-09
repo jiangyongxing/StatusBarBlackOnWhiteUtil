@@ -33,11 +33,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
 publish {
@@ -45,7 +41,7 @@ publish {
     userOrg = 'jiangyongxing'// Binary用户名
     groupId = 'cn.yongxing'// 依赖名compile 'x:y:z'中的包名x
     artifactId = 'StatusBarUtil' // 依赖名compile 'x:y:z'中的项目名y
-    publishVersion = '1.0.1'// 依赖名compile 'x:y:z'中的版本号z
+    publishVersion = '1.0.2'// 依赖名compile 'x:y:z'中的版本号z
     desc = 'Help Android developers solve the pain points of black bars on the status bar'// 对该开源组件的说明
     website = 'https://github.com/jiangyongxing/StatusBarBlackOnWhiteUtil'// VCS地址，即填写项目上传的Github地址
 }
