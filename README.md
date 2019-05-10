@@ -4,6 +4,8 @@
 
 ### 使用方式
 
+**设置白底黑字的状态：**
+
 ```java
 public class MainActivity extends AppCompatActivity {
 
@@ -14,5 +16,17 @@ public class MainActivity extends AppCompatActivity {
         StatusBarBlackOnWhiteUtil.setStatusBarColorAndFontColor(this);
     }
 }
+```
+
+**取消之前设置的白底黑字：**
+
+```java
+StatusBarBlackOnWhiteUtil.removeStatusBarBlackOnWhite(this);
+```
+
+**库的导入：**
+
+```groovy
+implementation 'cn.yongxing:StatusBarUtil:1.0.2'
 ```
 
