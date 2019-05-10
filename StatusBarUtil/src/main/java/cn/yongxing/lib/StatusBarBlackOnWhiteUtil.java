@@ -61,10 +61,20 @@ public class StatusBarBlackOnWhiteUtil {
                 false);
     }
 
+    /**
+     * 获取主题状态栏颜色，如果API小于21的话，就将返回黑色
+     *
+     * @param activity
+     * @return
+     */
     private static int getColorPrimary(Activity activity) {
-        TypedValue typedValue = new TypedValue();
-        activity.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        return typedValue.data;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TypedValue typedValue = new TypedValue();
+            activity.getTheme().resolveAttribute(android.R.attr.colorPrimaryDark, typedValue, true);
+            return typedValue.data;
+        } else {
+            return Color.BLACK;
+        }
     }
 
     /**
